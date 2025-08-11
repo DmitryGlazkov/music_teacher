@@ -11,6 +11,8 @@ services:
       - db
     volumes:
       - .:/app
+    command: >
+      sh -c "python migrations.py && gunicorn --bind 0.0.0.0:8000 music_teacher:app"
 
   db:
     image: postgres:14

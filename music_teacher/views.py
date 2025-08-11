@@ -1,9 +1,12 @@
-from flask import request, redirect, url_for, render_template, flash, get_flashed_messages
+from datetime import time
+from flask import (flash, get_flashed_messages, redirect, render_template,
+                   request, session, url_for)
+from flask_login import login_required, login_user, logout_user
 from flask_mail import Message
-from flask_login import login_user, logout_user, login_required
 
 from . import app, mail
 from .models import LearningProcess, LessonPrice, TextData, User
+
 
 @app.route('/')
 def index():
@@ -15,7 +18,6 @@ def index():
 
 @app.route('/callback', methods=['GET', 'POST'])
 def callback():
-    print("callback invoked")
     prices = LessonPrice.query.all()
     textdata = TextData.query.all()
     learningitems = LearningProcess.query.all()
@@ -33,25 +35,20 @@ def callback():
             )
             msg.body = f"Имя: {name}\nТелефон: {phone}\nКомментарий: {message_text}"
 
-            mail.send(msg)
+            # mail.send(msg)
             print("Email sent")
-
-            flash('Спасибо! Ваша заявка отправлена.', 'success')
-
+            
         except Exception as e:
             print(e)
             flash('Произошла ошибка при отправке. Попробуйте позже.', 'error')
-
         
-        messages = get_flashed_messages()
-        if messages:
-            for message in messages:
-                print(message)
+        form_type = request.form.get('form_type')
+        if form_type == "up_callback":
+            return redirect(url_for('index') + '#up_callback-form')
+        elif form_type == "down_callback":
+            flash('Спасибо! Ваша заявка отправлена.', 'success_down_callback')
+            return redirect(url_for('index') + '#down_callback-form')
 
-        print("Redirecting")
-        return redirect(url_for('index'))
-
-    print("Rendering page")
     return render_template('index.html', prices=prices, textdata = textdata, learningitems = learningitems)
 
 
@@ -73,3 +70,8 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/test-flash')
+def test_flash():
+    flash('Тестовое сообщение', 'success')
+    return redirect(url_for('index'))

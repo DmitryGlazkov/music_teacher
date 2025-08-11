@@ -1,6 +1,7 @@
+from werkzeug.security import generate_password_hash
+
 from music_teacher import app, db
 from music_teacher.models import User
-from werkzeug.security import generate_password_hash
 
 with app.app_context():
     username = input("Введите логин нового пользователя: ")

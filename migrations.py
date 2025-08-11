@@ -1,84 +1,117 @@
-from alembic.config import Config
-from alembic import command
-from sqlalchemy import create_engine, inspect, text
 import logging
-from sqlalchemy.exc import DisconnectionError
 import time
+import os
+import sys
 
-SQLALCHEMY_DATABASE_URI='postgresql://music_teacher_user:djembelessons@db:5432/djembe_teacher_db'
+from alembic import command
+from alembic.config import Config
+from sqlalchemy import create_engine, inspect, text
+from sqlalchemy.exc import OperationalError, SQLAlchemyError
+
+# Конфигурация
+SQLALCHEMY_DATABASE_URI = os.getenv(
+    "SQLALCHEMY_DATABASE_URI",
+    "postgresql://music_teacher_user:djembelessons@db:5432/djembe_teacher_db"
+)
+ALEMBIC_CONFIG_PATH = os.getenv("ALEMBIC_CONFIG_PATH", "migrations/alembic.ini")
+REQUIRED_TABLES = ['user', 'learning_process', 'lesson_price', 'text_data']
+MAX_DB_CONNECTION_ATTEMPTS = 5
+RETRY_DELAY = 3
+
 # Настройка логирования
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
 )
 logger = logging.getLogger(__name__)
 
-def init_database():
-    """Инициализация базы данных"""
+class DatabaseError(Exception):
+    """Кастомное исключение для ошибок базы данных"""
+    pass
+
+def wait_for_database():
+    """
+    Ожидает доступность базы данных.
+    Возвращает engine при успехе или None при неудаче.
+    """
     engine = create_engine(SQLALCHEMY_DATABASE_URI)
-    try:
-        logger.info("Schema creation completed successfully")
-    except Exception as e:
-        logger.error(f"Error creating schema: {e}")
-        raise
-    finally:
-        engine.dispose()
-
-def run_migrations_with_retry(max_attempts=3, delay=4):
-    """Запускает миграции с повторными попытками при ошибках подключения"""
-    attempt = 0
-    while attempt < max_attempts:
+    
+    for attempt in range(1, MAX_DB_CONNECTION_ATTEMPTS + 1):
         try:
-            run_migrations()
-            return
-        except DisconnectionError as e:
-            attempt += 1
-            if attempt == max_attempts:
-                logger.error(f"Failed after {max_attempts} attempts: {e}")
-                raise
-            logger.warning(f"Connection error (attempt {attempt}/{max_attempts}): {e}")
-            time.sleep(delay)
+            with engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+                logger.info("Database connection established")
+                return engine
+        except OperationalError as e:
+            if attempt == MAX_DB_CONNECTION_ATTEMPTS:
+                logger.error(f"Failed to connect to database after {MAX_DB_CONNECTION_ATTEMPTS} attempts")
+                return None
+            logger.warning(f"Database connection attempt {attempt}/{MAX_DB_CONNECTION_ATTEMPTS} failed. Retrying in {RETRY_DELAY} seconds...")
+            time.sleep(RETRY_DELAY)
+    
+    return None
 
-def run_migrations():
+def verify_tables(engine):
+    """
+    Проверяет наличие всех необходимых таблиц.
+    Возвращает список отсутствующих таблиц.
+    """
     try:
-        # Инициализируем БД если её нет
-        init_database()
-        
-        # Запускаем миграции
-        alembic_cfg = Config("migrations/alembic.ini")
-        command.upgrade(alembic_cfg, "head")
-        
-        # Проверяем, что все таблицы созданы
-        engine = create_engine(SQLALCHEMY_DATABASE_URI)
         inspector = inspect(engine)
-        required_tables = ['user', 'learning_process', 'lesson_price', 'text_data']
         existing_tables = inspector.get_table_names()
+        missing_tables = [table for table in REQUIRED_TABLES if table not in existing_tables]
         
-        missing_tables = set(required_tables) - set(existing_tables)
         if missing_tables:
-            raise Exception(f"Missing tables after migration: {missing_tables}")
+            logger.warning(f"Missing tables: {', '.join(missing_tables)}")
+        else:
+            logger.info("All required tables exist")
             
-        logger.info("Migrations completed successfully")
-        
-    except DisconnectionError as e:
-        logger.error(f"Database connection error: {e}")
-        raise
+        return missing_tables
+    except SQLAlchemyError as e:
+        logger.error(f"Error verifying tables: {str(e)}")
+        raise DatabaseError(f"Table verification failed: {str(e)}")
+
+def apply_migrations():
+    """Применяет миграции Alembic"""
+    try:
+        alembic_cfg = Config(ALEMBIC_CONFIG_PATH)
+        command.upgrade(alembic_cfg, "head")
+        logger.info("Database migrations applied successfully")
     except Exception as e:
-        logger.error(f"Error during migrations: {e}")
-        raise
+        logger.error(f"Failed to apply migrations: {str(e)}")
+        raise DatabaseError(f"Migration failed: {str(e)}")
+
+def main():
+    """Основная логика выполнения миграций"""
+    logger.info("Starting database migration process")
+    
+    # Шаг 1: Ожидание доступности БД
+    engine = wait_for_database()
+    if not engine:
+        logger.error("Database is not available")
+        sys.exit(1)
+    
+    try:
+        # Шаг 2: Применение миграций
+        apply_migrations()
+        
+        # Шаг 3: Проверка таблиц
+        missing_tables = verify_tables(engine)
+        if missing_tables:
+            logger.error(f"Migration incomplete: missing tables detected")
+            sys.exit(1)
+            
+        logger.info("Database migration completed successfully")
+        sys.exit(0)
+        
+    except DatabaseError as e:
+        logger.error(f"Migration process failed: {str(e)}")
+        sys.exit(1)
     finally:
         engine.dispose()
-
-def check_connection(engine):
-    try:
-        with engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-            logger.info("Database connection check: OK")
-            return True
-    except Exception as e:
-        logger.error(f"Database connection check failed: {e}")
-        return False
 
 if __name__ == "__main__":
-    run_migrations_with_retry()
-
+    main()

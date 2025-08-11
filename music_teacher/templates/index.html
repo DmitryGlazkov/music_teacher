@@ -6,9 +6,9 @@
     <meta name="description" content="">
     <title>Главная</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='nicepage.css') }}" media="screen">
-<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" media="screen">
     <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}" defer=""></script>
-    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='nicepage.js') }}" defer=""></script>
+
     <meta name="generator" content="Nicepage 7.7.3, nicepage.com">
     <meta name="referrer" content="origin">    
     
@@ -137,12 +137,13 @@
      background: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 999; width: 400px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
   
   <!-- Крестик для закрытия -->
-  <div id="close-booking" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</div>
+  <div id="close-booking" style="position: absolute; top: 1px; right: 10px; font-size: 24px; cursor: pointer;">&times;</div>
   
   <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-5">Запишитесь на бесплатный урок</h3>
 
   <div class="u-expanded-width-lg u-expanded-width-xl u-form u-grey-5 u-radius-15 u-form-1">
-                    <form action="{{ url_for('callback') }}" class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" name="form" style="padding: 30px;" autocomplete="off">
+                    <form id="up_callback-form" action="{{ url_for('callback') }}" method="POST" class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" name="form" style="padding: 30px;" autocomplete="off">
+                      <input type="hidden" name="form_type" value="up_callback">
                       <div class="u-form-group u-form-name">
                         <label for="name" class="u-label">Ваше имя</label>
                         <input type="text" placeholder="Enter your Name" id="name" name="name" class="u-border-none u-input u-input-rectangle u-radius-20" required>
@@ -406,23 +407,9 @@
               <div class="u-container-style u-layout-cell u-size-30-lg u-size-30-xl u-size-60-md u-size-60-sm u-size-60-xs u-layout-cell-2">
     <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-xl u-valign-bottom-xs u-container-layout-2">
                   <h3 class="u-align-left u-custom-font u-font-montserrat u-text u-text-5">{{ textdata[12].text|replace('\n', '<br>')|safe }}</h3>
-                  
-                  <div class="container">
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <div style="margin: 10px 0;">
-      {% for category, message in messages %}
-        <div style="padding: 10px; border-radius: 4px; background-color: #e71515; margin-bottom: 5px;">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
-</div>
-
                   <div class="u-expanded-width-lg u-expanded-width-xl u-form u-grey-5 u-radius-50 u-form-1">
-                    <form action="{{ url_for('callback') }}" class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" name="form" style="padding: 30px;" autocomplete="off">
+                    <form id="down_callback-form" action="{{ url_for('callback') }}" method="POST" class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" name="form" style="padding: 30px;" autocomplete="off">
+                      <input type="hidden" name="form_type" value="down_callback">
                       <div class="u-form-group u-form-name">
                         <label for="name" class="u-label">Ваше имя</label>
                         <input type="text" placeholder="Enter your Name" id="name" name="name" class="u-border-none u-input u-input-rectangle u-radius-20" required>
@@ -445,8 +432,33 @@
                           >
                           Запрос на звонок
                           </button>
-                      </div>
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div style="margin: 10px 0;">
+        {% for category, message in messages %}
+          {% if category.startswith('success_down_callback') or category.startswith('error_down_callback') %}
+            <div class="flash-message {{ category }}" style="
+              padding: 10px 15px;
+              border-radius: 20px;
+              margin-bottom: 10px;
+              font-family: Arial, sans-serif;
+              font-size: 14px;
+              color: #fff;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+              text-align: center;
+            ">
+              {{ message }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+</div>
+                        </div>
                     </form>
+                    
                   </div>
                 </div>
             </div>
@@ -457,4 +469,15 @@
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-b373"><div class="u-clearfix u-sheet u-sheet-1">
         <p class="u-small-text u-text u-text-variant u-text-1">Уроки игры на джембе в Краснодаре.</p>
       </div></footer> 
-</body></html>
+</body>
+<style>
+  .flash-message.error_down_callback
+  .flash-message.error_up_callback {
+    background-color: #e74c3c; /* Красный */
+  }
+  .flash-message.success_down_callback,
+  .flash-message.success_up_callback {
+    background-color: #27ae60; /* Зеленый */
+  }
+</style>
+</html>

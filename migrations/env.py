@@ -1,14 +1,16 @@
 import logging
-import sys
 import os
+import sys
 from logging.config import fileConfig
 
 from alembic import context
+
 # Добавьте путь к корню проекта, где находится __init__.py
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Импортируйте db из вашего пакета
 from music_teacher import db
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -45,9 +47,10 @@ def run_migrations_offline():
 
 
 def run_migrations_online():
-    from sqlalchemy import create_engine
-    from alembic import context
     from logging.config import fileConfig
+
+    from alembic import context
+    from sqlalchemy import create_engine
 
     # Инициализация конфигурации
     config = context.config

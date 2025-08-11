@@ -1,13 +1,11 @@
+from config import Config
+from dotenv import load_dotenv
 from flask import Flask
+from flask_admin.contrib.sqla import ModelView
+from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_admin.contrib.sqla import ModelView
-from flask_login import LoginManager
-
-from dotenv import load_dotenv
-from config import Config
-
 
 load_dotenv()
 
@@ -20,9 +18,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+from .admin import TextDataAdmin, admin
 from .models import LearningProcess, LessonPrice, TextData, User
-from .admin import TextDataAdmin
-from .admin import admin
+
 
 @login_manager.user_loader
 def load_user(user_id):
