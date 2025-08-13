@@ -32,10 +32,16 @@ class TextDataAdmin(ModelView):
         }
     }
 
+    column_default_sort = ('id', True)
+
     def on_model_change(self, form, model, is_created):
         if is_created:
             model.timestamp = datetime.utcnow()
         return super().on_model_change(form, model, is_created)
+
+
+class CustomModelView(ModelView):
+    column_default_sort = ('id', True)
 
 
 admin = Admin(

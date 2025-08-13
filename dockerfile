@@ -5,7 +5,7 @@ FROM python:3.13-slim
 WORKDIR /app
 
 # Установка netcat для проверки БД
-RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
 
 RUN pip install gunicorn==20.1.0
 
@@ -21,5 +21,5 @@ COPY . .
 EXPOSE 8000
 
 # Команда запуска
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "music_teacher:app"]
-CMD ["sh", "-c", "python migrations.py && gunicorn --bind 0.0.0.0:8000 music_teacher:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "music_teacher:app"]
+# CMD ["sh", "-c", "python migrations.py && gunicorn --bind 0.0.0.0:8000 music_teacher:app"]

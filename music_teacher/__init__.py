@@ -1,7 +1,6 @@
 from config import Config
 from dotenv import load_dotenv
 from flask import Flask
-from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -18,7 +17,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-from .admin import TextDataAdmin, admin
+from .admin import CustomModelView, TextDataAdmin, admin
 from .models import LearningProcess, LessonPrice, TextData, User
 
 
@@ -28,8 +27,8 @@ def load_user(user_id):
 
 admin.init_app(app)
 
-admin.add_view(ModelView(LearningProcess, db.session))
-admin.add_view(ModelView(LessonPrice, db.session))
+admin.add_view(CustomModelView(LearningProcess, db.session))
+admin.add_view(CustomModelView(LessonPrice, db.session))
 admin.add_view(TextDataAdmin(TextData, db.session))
 
 from . import views

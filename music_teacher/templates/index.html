@@ -7,7 +7,8 @@
     <title>Главная</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='nicepage.css') }}" media="screen">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" media="screen">
-    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}" defer=""></script>
+    
+    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='nicepage.js') }}" defer=""></script>
 
     <meta name="generator" content="Nicepage 7.7.3, nicepage.com">
     <meta name="referrer" content="origin">    
@@ -56,10 +57,111 @@
     
     <!-- Цвет темы браузера -->
     <meta name="theme-color" content="#ffffff" />
+<style>
+  /* Список меню - КРИТИЧЕСКИЕ ИЗМЕНЕНИЯ */
+  .u-nav-2 {
+    padding: 60px 20px 20px;
+    list-style: none;
+    display: block !important; /* Гарантируем блочный тип */
+  }
+  
+  .u-nav-2 .u-nav-item {
+    display: block !important; /* Принудительно блочный */
+    float: none !important; /* Отключаем обтекание */
+    width: 100% !important; /* На всю ширину */
+    margin: 0 0 15px 0 !important; /* Отступы только снизу */
+    clear: both !important; /* Запрет обтекания */
+  }
+  
+  .u-nav-2 .u-nav-link {
+    display: block !important;
+    padding: 12px 15px 12px 250px !important;
+    width: auto !important;
+    float: none !important;
+    color: #ffffff !important; /* Белый цвет текста */
+    text-shadow: 0 0 1px rgba(0,0,0,0.3); /* Легкая тень для лучшей читаемости */
+    font-weight: 400; /* Полужирный шрифт */
+    letter-spacing: 0.5px; /* Немного разрядки между буквами */
+  }
 
+  /* Стили при наведении */
+  .u-nav-2 .u-nav-link:hover {
+    color: #f0f0f0 !important; /* Слегка светлее при наведении */
+    background-color: rgba(255,255,255,0.1) !important; /* Легкий фон при наведении */
+  }
+
+  /* Активный пункт меню */
+  .u-nav-2 .u-nav-link.u-text-active-palette-1-base {
+    color: #ffcc00 !important; /* Желтый для активного пункта */
+    background-color: rgba(255,204,0,0.1) !important;
+  }
+
+  .u-nav-container-collapse {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
+  
+  .u-sidenav {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 420px;
+    height: 100%;
+    background: #2d2d2d;
+    z-index: 1001;
+    overflow-y: auto;
+    background-color: #2a2a2a !important; /* Чуть темнее фон */
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3); /* Тень для глубины */
+  }
+  
+  .u-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+  }
+  
+  .u-menu-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 1002;
+  }
+  
+  .u-menu-close::before,
+  .u-menu-close::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 2px;
+    background: #ffffff !important;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5); /* Тень для лучшей видимости */
+  }
+  
+  .u-menu-close::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  
+  .u-menu-close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+</style>
 </head>
   <body data-home-page="Главная.html" data-home-page-title="Главная" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="ru"><header class="u-clearfix u-header u-header" id="sec-bdd9"><div class="u-clearfix u-sheet u-valign-middle-lg u-sheet-1">
-        <a href="#" class="u-enable-responsive u-image u-logo u-image-1" data-image-width="212" data-image-height="299">
+        <a href="{{ url_for('index') }}" class="u-enable-responsive u-image u-logo u-image-1" data-image-width="212" data-image-height="299">
           <img class="u-logo-image u-logo-image-1" src="{{ url_for('static', filename='images/logo_dgembe.png') }}">
         </a>
         <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" data-responsive-from="MD">
@@ -88,7 +190,7 @@
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
-          <style class="menu-style">@media (max-width: 939px) {
+          <style class="menu-style">@media (max-width: 991px) {
                     [data-responsive-from="MD"] .u-nav-container {
                         display: none;
                     }
@@ -126,9 +228,9 @@
       </div></header>
     <section class="skrollable u-align-center u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-sm u-container-align-center-xl u-image u-parallax u-shading u-section-1" id="sec-504f" data-image-width="1500" data-image-height="1000">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <h1 class="u-align-center u-text u-text-default u-title u-text-1">{{ textdata[0].text }}</h1>
-        <p class="u-align-center u-large-text u-text u-text-variant u-text-2">{{ textdata[1].text }}</p>
-        <a href="#" class="u-border-none u-btn u-button-style u-hover-palette-2-base u-palette-3-base u-btn-1" id="open-form-btn"> {{ textdata[2].text }}</a>
+        <h1 class="u-align-center u-text u-text-default u-title u-text-1">{{ textdata.site_header }}</h1>
+        <p class="u-align-center u-large-text u-text u-text-variant u-text-2">{{ textdata.site_subheader }}</p>
+        <a href="#" class="u-border-none u-btn u-button-style u-hover-palette-2-base u-palette-3-base u-btn-1" id="open-form-btn"> {{ textdata.button_text }}</a>
       </div>
     </section>
 
@@ -193,8 +295,8 @@
 
     <section class="u-clearfix u-section-2" id="carousel_1844">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-sm u-valign-middle-xl u-sheet-1">
-        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata[3].text }} </h2>
-        <h3 class="u-align-left u-custom-font u-text u-text-font u-text-2"> {{ textdata[4].text|replace('\n', '<br>')|safe }}<br>
+        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata.section2_title }} </h2>
+        <h3 class="u-align-left u-custom-font u-text u-text-font u-text-2"> {{ textdata.section2_content|replace('\n', '<br>')|safe }}<br>
           <br>
         </h3>
         <img class="custom-expanded u-image u-image-1" src="{{ url_for('static', filename='images/logo_dgembe.png') }}" data-image-width="212" data-image-height="299">
@@ -202,7 +304,7 @@
     </section>
     <section class="u-clearfix u-container-align-center u-palette-2-light-3 u-section-3" id="carousel_2f9e">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata[5].text }}</h2>
+        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata.about_title }}</h2>
         <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
@@ -213,7 +315,7 @@
               </div>
               <div class="u-align-left u-container-align-left u-container-style u-layout-cell u-shape-rectangle u-size-33-lg u-size-33-xl u-size-60-md u-size-60-sm u-size-60-xs u-layout-cell-2">
                 <div class="u-container-layout u-container-layout-2">
-                  <p class="u-text u-text-2">{{ textdata[6].text|safe }}<br>
+                  <p class="u-text u-text-2">{{ textdata.about_content }}<br>
                     <br>
                     <br>
                     <br>
@@ -228,10 +330,10 @@
     </section>
     <section class="u-align-left u-clearfix u-container-align-left u-section-4" id="carousel_dcd3">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata[7].text }}</h2>
-        <p class="u-text u-text-2">{{ textdata[8].text|replace('\n', '<br>')|safe }}<br>
+        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata.section4_title }}</h2>
+        <p class="u-text u-text-2">{{ textdata.section4_content|replace('\n', '<br>')|safe }}<br>
         </p>
-        <p class="u-large-text u-text u-text-variant u-text-3">{{ textdata[9].text|replace('\n', '<br>')|safe }}</p>
+        <p class="u-large-text u-text u-text-variant u-text-3">{{ textdata.section4_list_title|replace('\n', '<br>')|safe }}</p>
         <div class="u-expanded-width u-list u-list-1">
           <div class="u-repeater u-repeater-1">
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-1">
@@ -241,7 +343,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-palette-2-base u-text-4">1</h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-5"> {{ learningitems[0].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-5"> {{ learningitems.step_1 }}</p>
               </div>
             </div>
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-2">
@@ -251,7 +353,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-2-base u-text-6">2</h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-7"> {{ learningitems[1].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-7"> {{ learningitems.step_2 }}</p>
               </div>
             </div>
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-3">
@@ -261,7 +363,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-2-base u-text-8">3</h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-9"> {{ learningitems[2].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-9"> {{ learningitems.step_3 }}</p>
               </div>
             </div>
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-4">
@@ -271,7 +373,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-2-base u-text-10">4 </h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-11"> {{ learningitems[3].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-11"> {{ learningitems.step_4 }}</p>
               </div>
             </div>
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-5">
@@ -281,7 +383,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-2-base u-text-12">5 </h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-13"> {{ learningitems[4].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-13"> {{ learningitems.step_5 }}</p>
               </div>
             </div>
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-6">
@@ -291,7 +393,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-2-base u-text-14">6 </h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-15"> {{ learningitems[5].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-15"> {{ learningitems.step_6 }}</p>
               </div>
             </div>
             <div class="u-align-left u-container-style u-gradient u-list-item u-radius-20 u-repeater-item u-shape-round u-list-item-7">
@@ -301,7 +403,7 @@
                     <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-2-base u-text-16">7 </h2>
                   </div>
                 </div>
-                <p class="u-text u-text-body-alt-color u-text-17"> {{ learningitems[6].text }}</p>
+                <p class="u-text u-text-body-alt-color u-text-17"> {{ learningitems.step_7 }}</p>
               </div>
             </div>
           </div>
@@ -321,28 +423,28 @@
 </g><g><g><path d="M289.391,233.291v278.261h155.826c18.442,0,33.391-14.949,33.391-33.391v-244.87H289.391z"></path>
 </g>
 </g></svg></span>
-                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2">{{ prices[0].lesson_name }} <br>
-                  <br>{{ prices[0].price_duration }}
+                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2">{{ prices.free_trial_lesson.lesson_name }} <br>
+                  <br>{{ prices.free_trial_lesson.price_duration }}
                 </h3>
-                <p class="u-align-center u-text u-text-3"> {{ prices[0].comment|replace('\n', '<br>')|safe }}</p>
+                <p class="u-align-center u-text u-text-3"> {{ prices.free_trial_lesson.comment|replace('\n', '<br>')|safe }}</p>
               </div>
             </div>
             <div class="u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-align-center u-icon u-text-palette-2-base u-icon-2"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 511.846 511.846" style=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-2bb9"></use></svg><svg class="u-svg-content" viewBox="0 0 511.846 511.846" id="svg-2bb9"><g><path d="m225.336 258.021-163.44-88.824c-7.27-3.949-15.855-3.786-22.969.443-7.114 4.228-11.359 11.693-11.359 19.969v206.052c0 8.337 4.502 16.076 11.75 20.197l163.443 92.917c3.603 2.048 7.543 3.071 11.484 3.071 4.016 0 8.031-1.063 11.682-3.188 7.231-4.207 11.548-11.714 11.548-20.081v-210.143c0-8.521-4.65-16.343-12.139-20.413z"></path><path d="m454.621 115.6c-.011-8.7-4.817-16.591-12.54-20.594l-178.226-92.399c-6.748-3.5-14.791-3.474-21.514.065l-175.605 92.399c-7.646 4.025-12.402 11.892-12.413 20.533-.01 8.639 4.727 16.517 12.362 20.559l175.606 92.976c3.4 1.799 7.133 2.699 10.868 2.699 3.689 0 7.379-.878 10.745-2.635l178.23-92.974c7.714-4.024 12.499-11.929 12.487-20.629z"></path><path d="m472.919 169.64c-7.11-4.229-15.699-4.396-22.966-.444l-163.445 88.825c-7.487 4.07-12.137 11.891-12.137 20.412v210.143c0 8.367 4.317 15.874 11.548 20.081 3.651 2.125 7.665 3.187 11.682 3.187 3.94 0 7.882-1.023 11.484-3.07l163.444-92.917c7.248-4.121 11.749-11.86 11.749-20.197v-206.051c0-8.276-4.245-15.741-11.359-19.969z"></path>
 </g></svg></span>
-                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-4"> {{ prices[1].lesson_name }}<br>
-                  <br>{{ prices[1].price_duration }}<br>
+                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-4"> {{ prices.group_lesson.lesson_name }}<br>
+                  <br>{{ prices.group_lesson.price_duration }}<br>
                 </h3>
-                <p class="u-align-center u-text u-text-5"> {{ prices[1].comment|replace('\n', '<br>')|safe }}
+                <p class="u-align-center u-text u-text-5"> {{ prices.group_lesson.comment|replace('\n', '<br>')|safe }}
                 </p>
               </div>
             </div>
             <div class="u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-align-center u-file-icon u-icon u-icon-3"><img src="{{ url_for('static', filename='images/Djembe_pic3.png') }}" alt=""></span>
-                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-6">{{ prices[2].lesson_name }}<br>
-                  <br>{{ prices[2].price_duration }} <br>
+                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-6">{{ prices.individual_lesson.lesson_name }}<br>
+                  <br>{{ prices.individual_lesson.price_duration }} <br>
                 </h3>
-                <p class="u-align-center u-text u-text-7"> {{ prices[2].comment|replace('\n', '<br>')|safe }} <br>
+                <p class="u-align-center u-text u-text-7"> {{ prices.individual_lesson.comment|replace('\n', '<br>')|safe }} <br>
                 </p>
               </div>
             </div>
@@ -354,9 +456,9 @@
 </g><g><g><path d="M77.156,305.957L18.44,431.87c-6.305,13.497,7.023,27.81,20.821,22.727l69.204-25.193l5.192,2.421l25.193,69.205    c5.051,13.899,24.496,14.857,30.793,1.342l49.152-105.401C160.198,386.779,109.578,353.165,77.156,305.957z"></path>
 </g>
 </g></svg></span>
-                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-8"> {{ prices[3].lesson_name }}<br>
+                <h3 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-8"> {{ prices.individual_lesson_passes.lesson_name }}<br>
                 </h3>
-                <p class="u-align-center u-text u-text-9"> {{ prices[3].comment|replace('\n', '<br>')|safe }}<br>
+                <p class="u-align-center u-text u-text-9"> {{ prices.individual_lesson_passes.comment|replace('\n', '<br>')|safe }}<br>
                 </p>
               </div>
             </div>
@@ -366,13 +468,13 @@
     </section>
     <section class="u-align-center u-clearfix u-container-align-center u-section-6" id="sec-a352">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">Контакты</h2>
+        <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{{ textdata.section5_title }}</h2>
         <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
               <div class="u-container-style u-layout-cell u-size-30-lg u-size-30-xl u-size-60-md u-size-60-sm u-size-60-xs u-layout-cell-1">
                 <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-xl u-container-layout-1">
-                  <h3 class="u-align-left u-custom-font u-font-montserrat u-text u-text-2">{{ textdata[11].text|replace('\n', '<br>')|safe }} </h3>
+                  <h3 class="u-align-left u-custom-font u-font-montserrat u-text u-text-2">{{ textdata.section5_text1|replace('\n', '<br>')|safe }} </h3>
                   <a href="tel:+79628528970" class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-2-base u-radius-50 u-text-active-white u-btn-1"><span class="u-icon u-icon-1"><svg class="u-svg-content" viewBox="0 0 891.024 891.024" style="width: 1em; height: 1em;"><g><path d="M2.8,180.875c46.6,134,144.7,286.2,282.9,424.399c138.2,138.2,290.4,236.301,424.4,282.9c18.2,6.3,38.3,1.8,52-11.8
 		l92.7-92.7l21.6-21.6c19.5-19.5,19.5-51.2,0-70.7l-143.5-143.4c-19.5-19.5-51.2-19.5-70.7,0l-38.899,38.9
 		c-20.2,20.2-52.4,22.2-75,4.6c-44.7-34.8-89-73.899-131.9-116.8c-42.9-42.9-82-87.2-116.8-131.9c-17.601-22.6-15.601-54.7,4.6-75
@@ -406,7 +508,7 @@
               </div>
               <div class="u-container-style u-layout-cell u-size-30-lg u-size-30-xl u-size-60-md u-size-60-sm u-size-60-xs u-layout-cell-2">
     <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-xl u-valign-bottom-xs u-container-layout-2">
-                  <h3 class="u-align-left u-custom-font u-font-montserrat u-text u-text-5">{{ textdata[12].text|replace('\n', '<br>')|safe }}</h3>
+                  <h3 class="u-align-left u-custom-font u-font-montserrat u-text u-text-5">{{ textdata.section5_text2|replace('\n', '<br>')|safe }}</h3>
                   <div class="u-expanded-width-lg u-expanded-width-xl u-form u-grey-5 u-radius-50 u-form-1">
                     <form id="down_callback-form" action="{{ url_for('callback') }}" method="POST" class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" name="form" style="padding: 30px;" autocomplete="off">
                       <input type="hidden" name="form_type" value="down_callback">
@@ -470,6 +572,54 @@
         <p class="u-small-text u-text u-text-variant u-text-1">Уроки игры на джембе в Краснодаре.</p>
       </div></footer> 
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Элементы управления
+  const hamburger = document.querySelector('.u-hamburger-link');
+  const menuClose = document.querySelector('.u-menu-close');
+  const mobileMenu = document.querySelector('.u-nav-container-collapse');
+  const overlay = document.querySelector('.u-menu-overlay');
+  
+  // Исходное меню и мобильное меню
+  const desktopMenu = document.querySelector('.u-nav-1');
+  const mobileMenuList = document.querySelector('.u-nav-2');
+  
+  // Функция копирования пунктов меню
+  function copyMenuItems() {
+    // Проверяем, есть ли пункты в десктопном меню
+    if(desktopMenu && desktopMenu.children.length > 0) {
+      // Очищаем мобильное меню
+      mobileMenuList.innerHTML = '';
+      
+      // Копируем все пункты
+      Array.from(desktopMenu.children).forEach(item => {
+        const clone = item.cloneNode(true);
+        // Убираем лишние классы/стили если нужно
+        clone.querySelector('.u-nav-link').classList.remove('u-text-active-palette-1-base', 'u-text-hover-palette-2-base');
+        mobileMenuList.appendChild(clone);
+      });
+    }
+  }
+  
+  // Копируем пункты при загрузке и при каждом открытии меню
+  copyMenuItems();
+  hamburger.addEventListener('click', function(e) {
+    e.preventDefault();
+    copyMenuItems(); // Обновляем на случай изменений
+    mobileMenu.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  });
+
+  // Закрытие меню
+  function closeMenu() {
+    mobileMenu.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  menuClose.addEventListener('click', closeMenu);
+  overlay.addEventListener('click', closeMenu);
+});
+</script>
 <style>
   .flash-message.error_down_callback
   .flash-message.error_up_callback {
